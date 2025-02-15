@@ -11,3 +11,7 @@ local mynetwork = network.new({
     layer.new({neuron.new(.3, {0.8, -0.4, 0.6})})
 })
 print(mynetwork:pass(inputs)[1])
+print(mynetwork:pass({3})[1])
+print(mynetwork:pass({4})[1])
+print(mynetwork:pass({5})[1])
+print(mynetwork:pass({6})[1])
