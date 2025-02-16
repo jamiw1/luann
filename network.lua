@@ -15,4 +15,12 @@ function network:pass(inputs)
     return outputs
 end
 
+function network:error(inputs, expected)
+    local outputs = self:pass(inputs)
+    local error = 0
+    for i, output in ipairs(outputs) do
+        error = error + (output - expected[i])^2
+    end
+    return error
+end
 return network
