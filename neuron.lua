@@ -6,6 +6,10 @@ local function activation(value)
     return 1/(1+math.exp(-value)) --Sigmoid
 end
 
+local function activationDerivative(value)
+    return value * (1 - value)
+end
+
 --[[
 Neuron code is structured like this:
   weights   +bias activate
@@ -32,6 +36,18 @@ function neuron:pass(inputs)
         total = total + (input * self.weights[i])
     end
     return activation(total + self.bias)
+end
+
+function neuron:updateNeuron(inputs, target, learning_rate)
+    local predicted = self:pass(inputs)
+    local error = predicted - target
+    local act_deriv = activationDerivative(predicted)
+    local delta = error * act_deriv
+
+    for i = 1, #neuron.weights do
+        neuron.weights[i] = neuron.weights[i] - learning_rate * delta * inputs[i]
+    end
+    neuron.bias = neuron.bias - learning_rate * delta
 end
 
 return neuron
