@@ -2,16 +2,49 @@ local neuron = require("neuron")
 local layer = require("layer")
 local network = require("network")
 
-local inputs = {2}
-local weights = {{0.5,-0.3,0.7},{0.8,-0.4,0.6}}
-local biases = {{1,-0.5,0.2},{0.3}}
+math.randomseed(os.time())
 
-local mynetwork = network.new({
-    layer.new({neuron.new(1, {0.5}), neuron.new(-.5, {-0.3}), neuron.new(.2, {0.7})}),
-    layer.new({neuron.new(.3, {0.8, -0.4, 0.6})})
-})
+function createNetwork(inputcount, neuroncounts)
+    local layers = {}
+    local previous_count = inputcount
+
+    for _, count in ipairs(neuroncounts) do
+        local neurons = {}
+        for i = 1, count do
+            local weights = {}
+            for j = 1, previous_count do
+                table.insert(weights, math.random())
+            end
+            local bias = math.random()
+            table.insert(neurons, neuron.new(bias, weights))
+        end
+        table.insert(layers, layer.new(neurons))
+        previous_count = count
+    end
+
+    return network.new(layers)
+end
+
+local trainingData = {
+    {{0, 0}, {0}},
+    {{0, 1}, {1}},
+    {{1, 0}, {1}},
+    {{1, 1}, {0}}
+}
+
+local inputs = {1, 1}
+local neuroncounts = {3, 1}
+local mynetwork = createNetwork(#inputs, neuroncounts)
+
+for i=1, 10000 do
+    mynetwork:train(trainingData, 0.1)
+    if i % 1000 == 0 then
+        print(mynetwork:error(inputs, {0}))
+    end
+end
+
 print(mynetwork:pass(inputs)[1])
-print(mynetwork:error(inputs, {0.8}))
+print(mynetwork:error(inputs, {0.9}))
 print(mynetwork:error(inputs, {1.2}))
 print(mynetwork:error(inputs, {0.3}))
 

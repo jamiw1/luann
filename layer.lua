@@ -17,4 +17,19 @@ function layer:pass(inputs)
     return outputs
 end
 
+function layer:updateLayer(errors, learning_rate)
+    local new_errors = {}
+    for i, neuron in ipairs(self.neurons) do
+        local neuron_error = errors[i]
+        local neuron_inputs = neuron.inputs
+        neuron:updateNeuron(neuron_error, learning_rate)
+        
+        -- Calculate the error for the previous layer
+        for j, input in ipairs(neuron_inputs) do
+            new_errors[j] = (new_errors[j] or 0) + neuron_error * neuron.weights[j]
+        end
+    end
+    return new_errors
+end
+
 return layer

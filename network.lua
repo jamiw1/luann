@@ -23,4 +23,24 @@ function network:error(inputs, expected)
     end
     return error
 end
+
+function network:train(trainingData, learning_rate)
+    for _, data in ipairs(trainingData) do
+        local inputs, expected = data[1], data[2]
+        local outputs = self:pass(inputs)
+        
+        -- Calculate output layer error
+        local errors = {}
+        for i, output in ipairs(outputs) do
+            errors[i] = output - expected[i]
+        end
+
+        -- Update each layer starting from the output layer
+        for i = #self.layers, 1, -1 do
+            local layer = self.layers[i]
+            errors = layer:updateLayer(errors, learning_rate)
+        end
+    end
+end
+
 return network
