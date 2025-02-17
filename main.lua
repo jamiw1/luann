@@ -21,17 +21,28 @@ local function create_network(network_shape)
     return network.new(layers)
 end
 
+function batchMutate(newnetwork, intensity, num)
+    local networks = {}
+    for i = 1, num do
+        networks[i] = newnetwork:mutate(intensity)
+    end
+    return networks
+end
+
 local mynetwork = create_network({2,4,1})
 print("Before mutation: "..mynetwork:printWeightsAndBiases())
 
-local newnetwork = mynetwork:mutate(0.4)
+local newnetworks = batchMutate(mynetwork, 0.1, 10)
 
 function love.draw()
-    love.graphics.print("Before mutation: "..mynetwork:printWeightsAndBiases())
-    love.graphics.print("After mutation: "..newnetwork:printWeightsAndBiases(),300,0)
+    love.graphics.print("Init Network:\nBefore mutation: "..mynetwork:printWeightsAndBiases())
+    for i, newnetwork in ipairs(newnetworks) do
+        print("After mutation: "..newnetwork:printWeightsAndBiases())
+        love.graphics.print("Network "..i..":\nAfter mutation: "..newnetwork:printWeightsAndBiases(),i * 200,0)
+    end
 end
 
-print("After mutation: "..newnetwork:printWeightsAndBiases())
+
 --print(mynetwork:pass({3})[1])
 --print(mynetwork:pass({4})[1])
 --print(mynetwork:pass({5})[1])
