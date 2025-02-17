@@ -1,10 +1,12 @@
 local network = {}
 network.__index = network
 
+math.randomseed(os.time())
+
 function network.new(layers)
-    local self = {}
+    local self = setmetatable({}, network)
     self.layers = layers
-    return setmetatable(self, network)
+    return self
 end
 
 function network:pass(inputs)
@@ -39,14 +41,14 @@ function network:printWeightsAndBiases()
     return endingstring
 end
 
-function network:mutate(intensity)
+function network.mutate(self, intensity)
     local newNetwork = network.new(self.layers)
-    for _, layer in ipairs(newNetwork.layers) do
-        for _, neuron in ipairs(layer.neurons) do
-            for i = 1, #neuron.weights do
-                neuron.weights[i] = neuron.weights[i] + (math.random() * 2 - 1) * intensity
+    for i = 1, #newNetwork.layers do
+        for k = 1, #newNetwork.layers[i].neurons do
+            for j = 1, #newNetwork.layers[i].neurons[k].weights do
+                newNetwork.layers[i].neurons[k].weights[j] = self.layers[i].neurons[k].weights[j] + (math.random() * 2) * intensity
             end
-            neuron.bias = neuron.bias + (math.random() * 2 - 1) * intensity
+            newNetwork.layers[i].neurons[k].bias = self.layers[i].neurons[k].bias + (math.random() * 2 - 1) * intensity
         end
     end
     return newNetwork

@@ -30,14 +30,16 @@ print(mynetwork:error(inputs, {0.64}))
 print(mynetwork:error(inputs, {1.2}))
 print(mynetwork:error(inputs, {0.3}))
 
-local newnetwork = mynetwork:mutate(0.1)
+local newnetwork = network.mutate(mynetwork, 0.4)
+print(newnetwork)
 
 function love.draw()
     -- In versions prior to 11.0, color component values are (0, 102, 102)
     love.graphics.print("Before mutation: "..mynetwork:printWeightsAndBiases())
     love.graphics.print("After mutation: "..newnetwork:printWeightsAndBiases(),300,0)
 end
-
+print("Before mutation: "..mynetwork:printWeightsAndBiases())
+print("After mutation: "..newnetwork:printWeightsAndBiases())
 --print(mynetwork:pass({3})[1])
 --print(mynetwork:pass({4})[1])
 --print(mynetwork:pass({5})[1])
