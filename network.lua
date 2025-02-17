@@ -1,11 +1,23 @@
 local network = {}
 network.__index = network
 
+function deepCopy(original)
+    local copy = {}
+    for k, v in pairs(original) do
+        if type(v) == "table" then
+            v = deepCopy(v)
+        end
+        copy[k] = v
+    end
+    return copy
+end
+
+
 math.randomseed(os.time())
 
 function network.new(layers)
     local self = setmetatable({}, network)
-    self.layers = layers
+    self.layers = deepCopy(layers)
     return self
 end
 
@@ -46,6 +58,7 @@ function network:mutate(intensity)
     for i = 1, #newNetwork.layers do
         for k = 1, #newNetwork.layers[i].neurons do
             for j = 1, #newNetwork.layers[i].neurons[k].weights do
+                print(((math.random() * 2) * intensity))
                 newNetwork.layers[i].neurons[k].weights[j] = newNetwork.layers[i].neurons[k].weights[j] + ((math.random() * 2) * intensity)
             end
             newNetwork.layers[i].neurons[k].bias = newNetwork.layers[i].neurons[k].bias + ((math.random() * 2 - 1) * intensity)

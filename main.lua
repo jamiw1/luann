@@ -22,13 +22,15 @@ local function create_network(network_shape)
 end
 
 local mynetwork = create_network({2,4,1})
+print("Before mutation: "..mynetwork:printWeightsAndBiases())
+
 local newnetwork = mynetwork:mutate(0.4)
 
 function love.draw()
     love.graphics.print("Before mutation: "..mynetwork:printWeightsAndBiases())
     love.graphics.print("After mutation: "..newnetwork:printWeightsAndBiases(),300,0)
 end
-print("Before mutation: "..mynetwork:printWeightsAndBiases())
+
 print("After mutation: "..newnetwork:printWeightsAndBiases())
 --print(mynetwork:pass({3})[1])
 --print(mynetwork:pass({4})[1])
