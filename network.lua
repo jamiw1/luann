@@ -23,4 +23,31 @@ function network:error(inputs, expected)
     end
     return error
 end
+
+function network:printWeightsAndBiases()
+    for i, layer in ipairs(self.layers) do
+        print("Layer " .. i)
+        for j, neuron in ipairs(layer.neurons) do
+            print(" Neuron " .. j)
+            print("     Bias: " .. neuron.bias)
+            for k, weight in ipairs(neuron.weights) do
+                print("     Weight " .. k .. ": " .. weight)
+            end
+        end
+    end
+end
+
+function network:mutate(intensity)
+    local newNetwork = network.new(self.layers)
+    for _, layer in ipairs(newNetwork.layers) do
+        for _, neuron in ipairs(layer.neurons) do
+            for i = 1, #neuron.weights do
+                neuron.weights[i] = neuron.weights[i] + (math.random() * 2 - 1) * intensity
+            end
+            neuron.bias = neuron.bias + (math.random() * 2 - 1) * intensity
+        end
+    end
+    return newNetwork
+end
+
 return network
