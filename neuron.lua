@@ -28,6 +28,9 @@ function neuron.new(bias, weights)
 end
 
 function neuron:pass(inputs)
+    if #inputs ~= #self.weights then
+        error("Number of inputs must be equal to number of weights")
+    end
     local total = 0
     for i, input in ipairs(inputs) do
         total = total + (input * self.weights[i])

@@ -2,51 +2,42 @@ local neuron = require("neuron")
 local layer = require("layer")
 local network = require("network")
 
-math.randomseed(os.time())
+local inputs = {2, 3}
+local weights = {{0.5,-0.3,0.7},{0.8,-0.4,0.6}}
+local biases = {{1,-0.5,0.2},{0.3}}
 
-function createNetwork(inputcount, neuroncounts)
+local function create_network(network_shape)
     local layers = {}
-    local previous_count = inputcount
-
-    for _, count in ipairs(neuroncounts) do
+    for i = 1, #network_shape - 1 do
         local neurons = {}
-        for i = 1, count do
+        local num_inputs = i == 1 and network_shape[1] or network_shape[i]
+        for j = 1, network_shape[i + 1] do
             local weights = {}
-            for j = 1, previous_count do
-                table.insert(weights, math.random())
+            for k = 1, num_inputs do
+                weights[k] = math.random() * 2 - 1
             end
-            local bias = math.random()
-            table.insert(neurons, neuron.new(bias, weights))
+            neurons[j] = neuron.new(math.random() * 2 - 1, weights)
         end
-        table.insert(layers, layer.new(neurons))
-        previous_count = count
+        layers[i] = layer.new(neurons)
     end
-
     return network.new(layers)
 end
 
-local trainingData = {
-    {{0, 0}, {0}},
-    {{0, 1}, {1}},
-    {{1, 0}, {1}},
-    {{1, 1}, {0}}
-}
-
-local inputs = {1, 1}
-local neuroncounts = {3, 1}
-local mynetwork = createNetwork(#inputs, neuroncounts)
-
-for i=1, 10000 do
-    mynetwork:train(trainingData, 0.1)
-    if i % 1000 == 0 then
-        print(mynetwork:error(inputs, {0}))
-    end
-end
-
+local mynetwork = create_network({2,4,1}) --[[network.new({
+    layer.new({neuron.new(1, {0.5}), neuron.new(-.5, {-0.3}), neuron.new(.2, {0.7})}),
+    layer.new({neuron.new(.3, {0.8, -0.4, 0.6})})
+})]]
 print(mynetwork:pass(inputs)[1])
-print(mynetwork:error(inputs, {0.9}))
+print(mynetwork:error(inputs, {0.64}))
 print(mynetwork:error(inputs, {1.2}))
 print(mynetwork:error(inputs, {0.3}))
+
+print("Before mutation: ")
+mynetwork:printWeightsAndBiases()
+
+local newnetwork = mynetwork:mutate(0.1)
+print("After mutation: ")
+newnetwork:printWeightsAndBiases()
 
 --print(mynetwork:pass({3})[1])
 --print(mynetwork:pass({4})[1])
