@@ -41,14 +41,14 @@ function network:printWeightsAndBiases()
     return endingstring
 end
 
-function network.mutate(self, intensity)
+function network:mutate(intensity)
     local newNetwork = network.new(self.layers)
     for i = 1, #newNetwork.layers do
         for k = 1, #newNetwork.layers[i].neurons do
             for j = 1, #newNetwork.layers[i].neurons[k].weights do
-                newNetwork.layers[i].neurons[k].weights[j] = self.layers[i].neurons[k].weights[j] + (math.random() * 2) * intensity
+                newNetwork.layers[i].neurons[k].weights[j] = newNetwork.layers[i].neurons[k].weights[j] + ((math.random() * 2) * intensity)
             end
-            newNetwork.layers[i].neurons[k].bias = self.layers[i].neurons[k].bias + (math.random() * 2 - 1) * intensity
+            newNetwork.layers[i].neurons[k].bias = newNetwork.layers[i].neurons[k].bias + ((math.random() * 2 - 1) * intensity)
         end
     end
     return newNetwork
