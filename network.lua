@@ -25,16 +25,18 @@ function network:error(inputs, expected)
 end
 
 function network:printWeightsAndBiases()
+    local endingstring = ""
     for i, layer in ipairs(self.layers) do
-        print("Layer " .. i)
+        endingstring = endingstring.."Layer " .. i .. "\n"
         for j, neuron in ipairs(layer.neurons) do
-            print(" Neuron " .. j)
-            print("     Bias: " .. neuron.bias)
+            endingstring = endingstring.."  Neuron " .. j .. "\n"
+            endingstring = endingstring.."      Bias: " .. neuron.bias .. "\n"
             for k, weight in ipairs(neuron.weights) do
-                print("     Weight " .. k .. ": " .. weight)
+                endingstring = endingstring.."     Weight " .. k .. ": " .. weight .. "\n"
             end
         end
     end
+    return endingstring
 end
 
 function network:mutate(intensity)

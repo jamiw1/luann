@@ -2,9 +2,7 @@ local neuron = require("neuron")
 local layer = require("layer")
 local network = require("network")
 
-local inputs = {2, 3}
-local weights = {{0.5,-0.3,0.7},{0.8,-0.4,0.6}}
-local biases = {{1,-0.5,0.2},{0.3}}
+local inputs = {0.5, 0.3}
 
 local function create_network(network_shape)
     local layers = {}
@@ -32,12 +30,13 @@ print(mynetwork:error(inputs, {0.64}))
 print(mynetwork:error(inputs, {1.2}))
 print(mynetwork:error(inputs, {0.3}))
 
-print("Before mutation: ")
-mynetwork:printWeightsAndBiases()
-
 local newnetwork = mynetwork:mutate(0.1)
-print("After mutation: ")
-newnetwork:printWeightsAndBiases()
+
+function love.draw()
+    -- In versions prior to 11.0, color component values are (0, 102, 102)
+    love.graphics.print("Before mutation: "..mynetwork:printWeightsAndBiases())
+    love.graphics.print("After mutation: "..newnetwork:printWeightsAndBiases(),300,0)
+end
 
 --print(mynetwork:pass({3})[1])
 --print(mynetwork:pass({4})[1])
