@@ -29,6 +29,25 @@ local function batchMutate(newnetwork, intensity, num)
     return networks
 end
 
+function sortingFunction(network1, network2) 
+    return network1[2] < network2[2]
+end
+function linear_scale(source_value, source_min, source_max, target_min, target_max)
+    return (source_value - source_min) * (target_max - target_min) / (source_max - source_min) + target_min
+end
+
+local function mutateBestNetworks(networkfitnesses --[[ {{network, fitness}} ]], gradient)
+    -- gradient is the top percent that reproduce, which is then scaled with the lowest network getting 0
+    networkfitnesses = table.sort(networkfitnesses, sortingFunction)
+    for i, networkfit in ipairs(networkfitnesses) do -- kill lowest percent of networks
+        if i/#networkfitnesses < gradient then
+            networkfitnesses[i] = nil
+        end
+    end
+    local newNetworks = {}
+    local networkCount = #networkfitnesses
+end
+
 local mynetwork = create_network({2,4,3,1})
 print("Before mutation: "..mynetwork:printWeightsAndBiases())
 
